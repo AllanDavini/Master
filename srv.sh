@@ -3,7 +3,7 @@
 if [ $1 ]; then
     P=$1    
 else
-    P="8000"
+    P="8888"
 fi
 
 if [ $2 ]; then
@@ -15,7 +15,7 @@ fi
 if [ $3 ]; then
     D=$3    
 else
-    D="/var/www/tcmed/public"
+    D="/mnt/public/zfIntermediario/public"
 fi
 
 

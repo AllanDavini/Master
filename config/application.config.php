@@ -6,7 +6,9 @@ return array(
         'DoctrineORMModule',
         'DoctrineDataFixtureModule',
         'SONUser',
-//        'SONBase',
+        'SONBase',
+        'SONAcl',
+        'SONUserRest',
     ),
     'module_listener_options' => array(
         'config_glob_paths'    => array(

@@ -1,0 +1,12 @@
+<h3>Novo Usuário</h3>
+<br />
+<?php
+
+$form = $this->form;
+$form->setAttribute('acion',$this->url('sonuser-admin/default',array('contoller'=>'users','action'=>'new')));
+$form->prepare();
+
+echo $this->form()->openTag($form);
+echo $this->formCollection($form);
+echo $this->for()->closeTag();
+?>

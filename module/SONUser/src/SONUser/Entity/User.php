@@ -3,10 +3,8 @@
 namespace SONUser\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-
 use Zend\Math\Rand;
 use Zend\Crypt\Key\Derivation\Pbkdf2;
-
 use Zend\Stdlib\Hydrator;
 
 /**
@@ -14,9 +12,11 @@ use Zend\Stdlib\Hydrator;
  *
  * @ORM\Table(name="sonuser_users")
  * @ORM\Entity
+ * @ORM\HasLifecycleCallbacks
+ * @ORM\Entity(repositoryClass="SONUse\UserRepository")
  */
-class SonuserUsers
-{
+class User {
+
     /**
      * @var integer
      *
@@ -82,19 +82,18 @@ class SonuserUsers
      */
     private $createdAt;
 
-    public function __construct(array $options = array()) 
-    {
+    public function __construct(array $options = array()) {
         /*
-        $hydrator = new Hydrator\ClassMethods;
-        $hydrator->hydrate($options, $this);
+          $hydrator = new Hydrator\ClassMethods;
+          $hydrator->hydrate($options, $this);
          */
-        (new Hydrator\ClassMethods)->hydrate($options, $this);
-        
+
         $this->createdAt = new \DateTime('now');
         $this->updatedAt = new \DateTime('now');
-        
+
         $this->salt = base64_encode(Rand::getBytes(8, true));
-        $this->activationKey = md5($this->email.$this->salt);
+        $this->activationKey = md5($this->email . $this->salt);
+        (new Hydrator\ClassMethods)->hydrate($options, $this);
     }
 
     function getId() {
@@ -152,12 +151,10 @@ class SonuserUsers
         $this->password = $this->encryptPassword($password);
         return $this;
     }
-    
-    public function encryptPassword($password)
-    {
-        return base64_encode(Pbkdf2::calc('sha256', $password, $this->salt, 10000, strlen($password*2)));
-        
-    }       
+
+    public function encryptPassword($password) {
+        return base64_encode(Pbkdf2::calc('sha256', $password, $this->salt, 10000, strlen($password * 2)));
+    }
 
     function setSalt($salt) {
         $this->salt = $salt;
@@ -174,16 +171,16 @@ class SonuserUsers
         return $this;
     }
 
-    function setUpdatedAt(\DateTime $updatedAt) {
-        $this->updatedAt = $updatedAt;
-        
+    /*
+     * @ORM\prePersist
+     */
+
+    function setUpdatedAt() {
+        $this->updatedAt = new \DateTime("now");
     }
 
-    function setCreatedAt(\DateTime $createdAt) {
-        $this->createdAt = $createdAt;
-        
+    function setCreatedAt() {
+        $this->createdAt = new \DateTime("now");
     }
 
-
-    
 }
